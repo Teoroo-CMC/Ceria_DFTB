@@ -1,0 +1,29 @@
+# STEP 2: Produce the specific training-file for CCS 
+(cd FITTING ; ccs_fetch DFTB 6.0 all ../TRAINING_DATA/DFT.db ../TRAINING_DATA/DFTB.db)
+
+# STEP 3: Now we can do fitting! 
+(cd FITTING ; ccs_fit)
+
+# STEP 4: Enjoy succes!(?)
+(cd FITTING; python3 plot_fit.py)
+
+# STEP 5: Convert to DFTB+ Slater-Koster format 
+(cd FITTING; ccs_export_sktable CCS_params.json)
+
+  #pasting the splines into the skf-files
+sed -n '/Spline/q;p' SKF-FILES/ORIGINAL/Ce-O.skf  > SKF-FILES/REFITTED/Ce-O.skf
+cat FITTING/Ce-O.spl >> SKF-FILES/REFITTED/Ce-O.skf
+sed -n '/Spline/q;p' SKF-FILES/ORIGINAL/O-Ce.skf > SKF-FILES/REFITTED/O-Ce.skf
+cat FITTING/O-Ce.spl >> SKF-FILES/REFITTED/O-Ce.skf
+(cd FITTING; python3 plot_rep.py)
+
+# STEP 6: Use the new parameters
+  #cell opt
+(cd VALIDATION/CELL_OPT; dftb+ > std.out ; paste in.gen Optimized.gen)
+  #phonons
+(cd VALIDATION/PHONONS/001; dftb+ > std.out)
+(cd VALIDATION/PHONONS/002; dftb+ > std.out)
+(cd VALIDATION/PHONONS/; phonopy -f {001..002}/results.tag --dftb+ > std.out)
+(cd VALIDATION/PHONONS/; phonopy -p band.conf -s --dftb+ >> std.out )
+(cd VALIDATION/PHONONS/; python3 plot_phonon_spectra.py)
+

@@ -1,0 +1,23 @@
+{
+        "General": {
+                "interface": "DFTB",
+                "ewald_scaling": 1.0,
+                "merging": "True"
+        },
+        "Train-set": "structures.json",
+        "Test-set": "structures.json",
+        "Twobody": {
+                "Ce-O": {
+                        "Rcut": 5.3,
+                        "Resolution": 0.13,
+                        "Swtype": "rep",
+                        "const_type": "Mono",
+                        "Rmin": 1.7945880135242844
+                }
+        },
+        "Reference": "structures.json",
+        "Onebody": [
+                "Ce",
+                "O"
+        ]
+}

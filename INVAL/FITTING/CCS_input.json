@@ -1,0 +1,18 @@
+{
+"Twobody":{
+	"Ce-O":{
+		"Rcut":5.3,
+		"Resolution":0.13,
+                "Swtype":"rep",
+                "const_type":"Mono"
+	}
+},
+
+"Reference":"structures.json",
+
+"General":{
+	"interface":"DFTB",
+        "merging":"True"
+}
+
+}

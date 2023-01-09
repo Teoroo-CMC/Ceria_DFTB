@@ -1,0 +1,46 @@
+2023-01-05 12:23:03,880 - root - INFO -       Started
+2023-01-05 12:23:04,809 - ccs.fitting.spline_functions - INFO -       Applying monotonous constraints for pair: Ce-O
+2023-01-05 12:23:05,457 - ccs.fitting.spline_functions - INFO -       Merging intervall for pair Ce-O. Number of knots reduced from 28 to 22. 
+2023-01-05 12:23:05,458 - ccs.fitting.objective - INFO -       positive definite:False
+2023-01-05 12:23:05,464 - ccs.fitting.objective - INFO -       
+ The best switch is : 22 with mse: 1.6203
+2023-01-05 12:23:05,470 - root - INFO -       Ended
+2023-01-05 13:00:56,387 - root - INFO -       Started
+2023-01-05 13:00:57,324 - ccs.fitting.spline_functions - INFO -       Applying monotonous constraints for pair: Ce-O
+2023-01-05 13:00:57,960 - ccs.fitting.spline_functions - INFO -       Merging intervall for pair Ce-O. Number of knots reduced from 28 to 22. 
+2023-01-05 13:00:57,961 - ccs.fitting.objective - INFO -       positive definite:False
+2023-01-05 13:00:57,966 - ccs.fitting.objective - INFO -       
+ The best switch is : 22 with mse: 1.6203
+2023-01-05 13:00:57,973 - root - INFO -       Ended
+2023-01-05 13:01:51,303 - root - INFO -       Started
+2023-01-05 13:01:52,224 - ccs.fitting.spline_functions - INFO -       Applying monotonous constraints for pair: Ce-O
+2023-01-05 13:01:52,853 - ccs.fitting.spline_functions - INFO -       Merging intervall for pair Ce-O. Number of knots reduced from 28 to 22. 
+2023-01-05 13:01:52,854 - ccs.fitting.objective - INFO -       positive definite:False
+2023-01-05 13:01:52,860 - ccs.fitting.objective - INFO -       
+ The best switch is : 22 with mse: 1.6203
+2023-01-05 13:01:52,867 - root - INFO -       Ended
+2023-01-05 13:04:13,690 - root - INFO -       Started
+2023-01-05 13:04:13,891 - ccs.fitting.main - INFO -       Generating one-body information from training-set.
+2023-01-05 13:04:13,891 - ccs.fitting.main - INFO -           Added elements: ['Ce', 'O']
+2023-01-05 13:04:14,596 - ccs.fitting.spline_functions - INFO -       Applying monotonous constraints for pair: Ce-O
+2023-01-05 13:04:15,220 - ccs.fitting.spline_functions - INFO -       Merging intervall for pair Ce-O. Number of knots reduced from 28 to 22. 
+2023-01-05 13:04:15,221 - ccs.fitting.objective - INFO -       positive definite:False
+2023-01-05 13:04:15,227 - ccs.fitting.objective - INFO -       
+ The best switch is : 22 with mse: 1.6203
+2023-01-05 13:04:15,234 - root - INFO -       Ended
+2023-01-05 13:10:08,180 - root - INFO -       Started
+2023-01-05 13:10:08,380 - ccs.fitting.main - INFO -       Generating one-body information from training-set.
+2023-01-05 13:10:08,380 - ccs.fitting.main - INFO -           Added elements: ['Ce', 'O']
+2023-01-05 13:10:09,091 - ccs.fitting.spline_functions - INFO -       Applying monotonous constraints for pair: Ce-O
+2023-01-05 13:10:09,735 - ccs.fitting.spline_functions - INFO -       Merging intervall for pair Ce-O. Number of knots reduced from 28 to 22. 
+2023-01-05 13:10:09,736 - ccs.fitting.objective - INFO -       positive definite:False
+2023-01-05 13:10:09,741 - ccs.fitting.objective - INFO -       
+ The best switch is : 22 with mse: 1.6203
+2023-01-05 13:10:09,748 - root - INFO -       Ended
+2023-01-05 14:10:33,179 - root - INFO -       Started
+2023-01-05 14:10:33,383 - ccs.fitting.main - INFO -       Generating one-body information from training-set.
+2023-01-05 14:10:33,383 - ccs.fitting.main - INFO -           Added elements: ['Ce', 'O']
+2023-01-05 14:10:34,149 - ccs.fitting.spline_functions - INFO -       Applying monotonous constraints for pair: Ce-O
+2023-01-05 14:10:34,831 - ccs.fitting.spline_functions - INFO -       Merging intervall for pair Ce-O. Number of knots reduced from 28 to 22. 
+2023-01-05 14:10:34,831 - ccs.fitting.objective - INFO -       positive definite:False
+2023-01-05 14:10:34,844 - root - INFO -       Ended
