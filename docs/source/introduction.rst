@@ -9,6 +9,9 @@ energies and the corresponding *electronic energies* from DFTB.
 This example revolves around some of the CCS scripts to handle the various tasks
 involved in the fitting of a repulsive potential. The data used in this example 
 originates from Ref. `1 <https://pubs.acs.org/doi/10.1021/acs.jctc.0c01156>`_.  
+
+Data for the f-in-core and f-in-valance approched are located in the folders ``IN_OCRE`` and ``IN_VAL``, respectively.  
+
  
 Two ASE data-bases, one containing the reference DFT data (computed with VASP) and
 one containing the corresponding DFTB data are provided in the current example.  
