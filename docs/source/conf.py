@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'CCS'
+project = 'Ceria_DFTB'
 copyright = '2022, Jolla Kullgren'
 author = 'Jolla Kullgren'
 
@@ -28,7 +28,7 @@ author = 'Jolla Kullgren'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx_copybutton",
+ #   "sphinx_copybutton",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
