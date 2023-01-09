@@ -1,0 +1,338 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Fitting 2-body repulsive potentials using CCS &#8212; CCS  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/design-tabs.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="fitting-2-body-repulsive-potentials-using-ccs">
+<h1>Fitting 2-body repulsive potentials using CCS<a class="headerlink" href="#fitting-2-body-repulsive-potentials-using-ccs" title="Permalink to this heading">¶</a></h1>
+<p>When we use the Curvature Constrained Splines method (<a class="reference external" href="https://pubs.acs.org/doi/10.1021/acs.jctc.0c01156">CCS</a>) to fit a repulsive potential, we fit a 2-body potential
+to reproduce, as closely as possible, the energy difference between DFT reference
+energies and the corresponding <em>electronic energies</em> from DFTB.</p>
+<p>This example revolves around some of the CCS scripts to handle the various tasks
+involved in the fitting of a repulsive potential. The data used in this example
+originates from Ref. <a class="reference external" href="https://pubs.acs.org/doi/10.1021/acs.jctc.0c01156">1</a>.</p>
+<p>Two ASE data-bases, one containing the reference DFT data (computed with VASP) and
+one containing the corresponding DFTB data are provided in the current example.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The script <code class="docutils literal notranslate"><span class="pre">RUN</span></code> can be used to automatically execute the various steps of this example. The scrips can be used as templates when using CCS to fit repulsive potentials for a new system.</p>
+</div>
+<section id="collect-the-dft-en-dftb-electroinc-energies">
+<h2>1. Collect the DFT en DFTB electroinc energies<a class="headerlink" href="#collect-the-dft-en-dftb-electroinc-energies" title="Permalink to this heading">¶</a></h2>
+<p>Using the script <code class="docutils literal notranslate"><span class="pre">ccs_build_db</span></code> we can build two ase data-bases
+containing the DFT and DFTB data. These data-bases are used in the next step.
+We need a list pointing to the DFT data and the corresponding DFTB data.
+The code assume that the we provide locations of the DFT data (e.g. <code class="docutils literal notranslate"><span class="pre">OUTCAR.gz</span></code> or any other ASE readable file containing a geometry and corresponding energy) in the
+first column and the DFTB data in the second column (should be a <code class="docutils literal notranslate"><span class="pre">results.tag</span></code> file).</p>
+<div class="info admonition">
+<p class="admonition-title">Task</p>
+<p><strong>* (In this example, this step have allready been performed. The raw-data used is not provided.) *</strong></p>
+<p>In order create the data-bases we make a folder (<code class="docutils literal notranslate"><span class="pre">TRAINING_DATA</span></code> in the current example)  with a file pointing to the training-data (<code class="docutils literal notranslate"><span class="pre">list</span></code>) and the
+execute the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ccs_build_db</span> <span class="n">DFTB</span> <span class="nb">list</span> <span class="n">DFT</span><span class="o">.</span><span class="n">db</span> <span class="n">DFTB</span><span class="o">.</span><span class="n">db</span>
+</pre></div>
+</div>
+<p>Example of a <code class="docutils literal notranslate"><span class="pre">list</span></code> file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.20</span><span class="o">/</span><span class="n">VASP</span><span class="o">/</span><span class="n">OUTCAR</span>    <span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.20</span><span class="o">/</span><span class="n">DFTB</span><span class="o">/</span><span class="n">results</span><span class="o">.</span><span class="n">tag</span>
+<span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.21</span><span class="o">/</span><span class="n">VASP</span><span class="o">/</span><span class="n">OUTCAR</span>    <span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.21</span><span class="o">/</span><span class="n">DFTB</span><span class="o">/</span><span class="n">results</span><span class="o">.</span><span class="n">tag</span>
+<span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.22</span><span class="o">/</span><span class="n">VASP</span><span class="o">/</span><span class="n">OUTCAR</span>    <span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.22</span><span class="o">/</span><span class="n">DFTB</span><span class="o">/</span><span class="n">results</span><span class="o">.</span><span class="n">tag</span>
+<span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.23</span><span class="o">/</span><span class="n">VASP</span><span class="o">/</span><span class="n">OUTCAR</span>    <span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.23</span><span class="o">/</span><span class="n">DFTB</span><span class="o">/</span><span class="n">results</span><span class="o">.</span><span class="n">tag</span>
+<span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.24</span><span class="o">/</span><span class="n">VASP</span><span class="o">/</span><span class="n">OUTCAR</span>    <span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.24</span><span class="o">/</span><span class="n">DFTB</span><span class="o">/</span><span class="n">results</span><span class="o">.</span><span class="n">tag</span>
+<span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.25</span><span class="o">/</span><span class="n">VASP</span><span class="o">/</span><span class="n">OUTCAR</span>    <span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.25</span><span class="o">/</span><span class="n">DFTB</span><span class="o">/</span><span class="n">results</span><span class="o">.</span><span class="n">tag</span>
+<span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.26</span><span class="o">/</span><span class="n">VASP</span><span class="o">/</span><span class="n">OUTCAR</span>    <span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.26</span><span class="o">/</span><span class="n">DFTB</span><span class="o">/</span><span class="n">results</span><span class="o">.</span><span class="n">tag</span>
+<span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.27</span><span class="o">/</span><span class="n">VASP</span><span class="o">/</span><span class="n">OUTCAR</span>    <span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.27</span><span class="o">/</span><span class="n">DFTB</span><span class="o">/</span><span class="n">results</span><span class="o">.</span><span class="n">tag</span>
+<span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.28</span><span class="o">/</span><span class="n">VASP</span><span class="o">/</span><span class="n">OUTCAR</span>    <span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.28</span><span class="o">/</span><span class="n">DFTB</span><span class="o">/</span><span class="n">results</span><span class="o">.</span><span class="n">tag</span>
+<span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.29</span><span class="o">/</span><span class="n">VASP</span><span class="o">/</span><span class="n">OUTCAR</span>    <span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.29</span><span class="o">/</span><span class="n">DFTB</span><span class="o">/</span><span class="n">results</span><span class="o">.</span><span class="n">tag</span>
+<span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.30</span><span class="o">/</span><span class="n">VASP</span><span class="o">/</span><span class="n">OUTCAR</span>    <span class="o">../</span><span class="n">RAW_DATA</span><span class="o">/</span><span class="n">BULK_CeO2</span><span class="o">/</span><span class="mf">5.30</span><span class="o">/</span><span class="n">DFTB</span><span class="o">/</span><span class="n">results</span><span class="o">.</span><span class="n">tag</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can get a quick overview of the training-data using the Atomic Simulation
+Environment (<a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE</a>) by issuing the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ase</span><span class="o">-</span><span class="n">gui</span> <span class="n">DFT</span><span class="o">.</span><span class="n">db</span>
+</pre></div>
+</div>
+<p>(see figure below)</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="_images/ase.png"><img alt="ase" src="_images/ase.png" style="width: 600px;" /></a>
+<figcaption>
+<p><span class="caption-text">With the Atomic Simulation Environment we can get an quick overview
+of the training-data. We can, amongst much other, browse the structures
+and plot the energies.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>All pairs you intead to make a repulsive potential for must have a dummy spline at the
+bottom of the it’s skf-file when the DFTB data is generated.</p>
+</div>
+</section>
+<section id="produce-the-specific-training-file-for-ccs">
+<h2>2. Produce the specific training-file for CCS<a class="headerlink" href="#produce-the-specific-training-file-for-ccs" title="Permalink to this heading">¶</a></h2>
+<p>We collect pair-wise distances from the structures stored in the two
+data-bases and create a file called <code class="docutils literal notranslate"><span class="pre">structures.json</span></code> that CCS
+use for the fitting.</p>
+<div class="info admonition">
+<p class="admonition-title">Task</p>
+<p>Go to the <code class="docutils literal notranslate"><span class="pre">FITTING</span></code> folder and execute:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ccs_fetch</span> <span class="n">DFTB</span> <span class="mf">6.0</span> <span class="nb">all</span> <span class="n">TRAINING_DATA</span><span class="o">/</span><span class="n">DFT</span><span class="o">.</span><span class="n">db</span> <span class="n">TRAINING_DATA</span><span class="o">/</span><span class="n">DFTB</span><span class="o">.</span><span class="n">db</span>
+</pre></div>
+</div>
+<p>The arguments corresponds to, in order:</p>
+<p><code class="docutils literal notranslate"><span class="pre">MODE</span> <span class="pre">cutoff_radius(Å)</span> <span class="pre">No_of_structures</span> <span class="pre">DFT_DATABASE</span> <span class="pre">DFTB_DATABASE</span></code></p>
+<p>For repulsive potential fitting set <code class="docutils literal notranslate"><span class="pre">MODE=DFTB</span></code>.</p>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Never use a cut-off radius that is smaller than used in the fitting (see next step).</p>
+</div>
+</section>
+<section id="now-we-can-do-fitting">
+<h2>3. Now we can do fitting!<a class="headerlink" href="#now-we-can-do-fitting" title="Permalink to this heading">¶</a></h2>
+<p>We provide the setting in a file <code class="docutils literal notranslate"><span class="pre">CCS_input.json</span></code> where we speicify the cut-off radius
+the resolution of the spline and the type of constraints (rep = stricktly repulsive,
+sw=attractive at long distance and repulsive at short distance).</p>
+<p>CCS_input.json:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;Twobody&quot;</span><span class="p">:{</span>
+    <span class="s2">&quot;Ce-O&quot;</span><span class="p">:{</span>
+            <span class="s2">&quot;Rcut&quot;</span><span class="p">:</span><span class="mf">5.3</span><span class="p">,</span>
+            <span class="s2">&quot;Resolution&quot;</span><span class="p">:</span><span class="mf">0.13</span><span class="p">,</span>
+                <span class="s2">&quot;Swtype&quot;</span><span class="p">:</span><span class="s2">&quot;rep&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;const_type&quot;</span><span class="p">:</span><span class="s2">&quot;Mono&quot;</span>
+    <span class="p">}</span>
+<span class="p">},</span>
+
+<span class="s2">&quot;Onebody&quot;</span><span class="p">:[</span><span class="s2">&quot;Ce&quot;</span><span class="p">],</span>
+
+<span class="s2">&quot;Reference&quot;</span><span class="p">:</span><span class="s2">&quot;structures.json&quot;</span><span class="p">,</span>
+
+<span class="s2">&quot;General&quot;</span><span class="p">:{</span>
+    <span class="s2">&quot;interface&quot;</span><span class="p">:</span><span class="s2">&quot;DFTB&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;merging&quot;</span><span class="p">:</span><span class="s2">&quot;True&quot;</span>
+<span class="p">}</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="info admonition">
+<p class="admonition-title">Task</p>
+<p>Check or modify the file <code class="docutils literal notranslate"><span class="pre">CCS_input.json</span></code> and execute:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ccs_fit</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Rcut must be smaller than the cut-off radius in the previus step!</p>
+</div>
+</section>
+<section id="enjoy-succes">
+<h2>4. Enjoy succes!(?)<a class="headerlink" href="#enjoy-succes" title="Permalink to this heading">¶</a></h2>
+<p>The quallity of the fit is provided in <code class="docutils literal notranslate"><span class="pre">CCS_error.out</span></code> and the resulting
+parameters in <code class="docutils literal notranslate"><span class="pre">CCS_params.json</span></code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">plot_fit.py</span></code> script in the <code class="docutils literal notranslate"><span class="pre">FITTING</span></code> folder to
+get an overview of the fitting quallity.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">plot_fit</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="_images/corrplot.png"><img alt="ase" src="_images/corrplot.png" style="width: 400px;" /></a>
+<figcaption>
+<p><span class="caption-text">Correlation plot showing the reuslts of the fitting. The target repulsive energies
+are given at the x-axis and the resulting repulisive from the fitting is shown at
+the y-axis.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="convert-to-dftb-slater-koster-format">
+<h2>5. Convert to DFTB+ Slater-Koster format<a class="headerlink" href="#convert-to-dftb-slater-koster-format" title="Permalink to this heading">¶</a></h2>
+<p>DFTB+ have a specific format for the 2-body potential, a cubic
+spline-table appended at the end of the Slater-Koster file. We need
+to convert the <code class="docutils literal notranslate"><span class="pre">CCS_params.json</span></code> file to this format.</p>
+<div class="info admonition">
+<p class="admonition-title">Task</p>
+<p>Execute:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ccs_export_sktable</span> <span class="n">CCS_params</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+<p>The result are printed to files <code class="docutils literal notranslate"><span class="pre">X-Y.spl</span></code> where <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span></code> are
+the corresponding elements in the 2-body potential, e.g
+<code class="docutils literal notranslate"><span class="pre">X=Ce,</span> <span class="pre">Y=O</span></code>.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">plot_rep.py</span></code> script in the <code class="docutils literal notranslate"><span class="pre">FITTING</span></code> folder to
+display the resulting Ce-O spline repulsive contained in the file <code class="docutils literal notranslate"><span class="pre">Ce-O.spl</span></code> .</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">plot_rep</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="_images/Reps.png"><img alt="ase" src="_images/Reps.png" style="width: 600px;" /></a>
+<figcaption>
+<p><span class="caption-text">Comparative plot showing a 2-body spline repulsive for Ce-O fitted to a data-set
+of 75 structures.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="use-the-new-parameters">
+<h2>6. Use the new parameters<a class="headerlink" href="#use-the-new-parameters" title="Permalink to this heading">¶</a></h2>
+<p>Replace the dummy-spline in the <code class="docutils literal notranslate"><span class="pre">.skf</span></code> file contained in the folder <code class="docutils literal notranslate"><span class="pre">SKF-FILES/REFITTED</span></code> with the data from the <code class="docutils literal notranslate"><span class="pre">.spl</span></code> file generated in step 5 and
+you are good to go.</p>
+<p>In the folder <code class="docutils literal notranslate"><span class="pre">VALIDATION</span></code> you can perform a validation of the generated parameters. Two examples are provided:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Cell optimization of bulk ceria (located in the folder: <code class="docutils literal notranslate"><span class="pre">VALIDATION/CELL_OPT</span></code>)</p></li>
+<li><p>Phonon spectra of of bulk ceria (located in the folder: <code class="docutils literal notranslate"><span class="pre">VALIDATION/PHONONS</span></code>)</p></li>
+</ul>
+</div></blockquote>
+<p>In order to run these examples you need <a class="reference external" href="https://dftbplus.org/">DFTB+</a> and <a class="reference external" href="https://phonopy.github.io/phonopy/">phonopy</a>.</p>
+<section id="cell-optimization-of-bulk-ceria">
+<h3>Cell optimization of bulk ceria<a class="headerlink" href="#cell-optimization-of-bulk-ceria" title="Permalink to this heading">¶</a></h3>
+<div class="info admonition">
+<p class="admonition-title">Task</p>
+<p>Go to the folder <code class="docutils literal notranslate"><span class="pre">VALIDATION/CELL_OPT</span></code> and run dftb by executing the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dftb</span><span class="o">+</span>
+</pre></div>
+</div>
+<p>The results can be inspected by comparing the files <code class="docutils literal notranslate"><span class="pre">in.gen</span></code> and <code class="docutils literal notranslate"><span class="pre">Optimized.gen</span></code> which contains the
+optimized DFT geometry (the starting point of the DFTB optimization) and the DFTB optimized geometry, respectively.</p>
+<p>Note: The <code class="docutils literal notranslate"><span class="pre">dftb_in.hsd</span></code> file point to the Slater-Koster files contained in the <code class="docutils literal notranslate"><span class="pre">SKF-FILES/REFITTED</span></code> folder.</p>
+</div>
+</section>
+<section id="phonon-spectra-of-bulk-ceria">
+<h3>Phonon spectra of bulk ceria<a class="headerlink" href="#phonon-spectra-of-bulk-ceria" title="Permalink to this heading">¶</a></h3>
+<div class="info admonition">
+<p class="admonition-title">Task</p>
+<p>Go to the folders <code class="docutils literal notranslate"><span class="pre">VALIDATION/PHONONS/001</span></code> and <code class="docutils literal notranslate"><span class="pre">VALIDATION/PHONONS/001</span></code> and
+perform a dftb+ calculation in each of them. To generate the phonon spectra we go
+to the folder <code class="docutils literal notranslate"><span class="pre">VALIDATION/PHONONS</span></code> and make use of <code class="docutils literal notranslate"><span class="pre">phonopy</span></code> by using the
+following commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">phonopy</span> <span class="o">-</span><span class="n">f</span> <span class="p">{</span><span class="mf">001..002</span><span class="p">}</span><span class="o">/</span><span class="n">results</span><span class="o">.</span><span class="n">tag</span> <span class="o">--</span><span class="n">dftb</span><span class="o">+</span>
+<span class="n">phonopy</span> <span class="o">-</span><span class="n">p</span> <span class="n">band</span><span class="o">.</span><span class="n">conf</span> <span class="o">-</span><span class="n">s</span> <span class="o">--</span><span class="n">dftb</span>
+</pre></div>
+</div>
+<p>The reults can visualized using the <code class="docutils literal notranslate"><span class="pre">plot_phonon_spectra.py</span></code> script which produce a figure
+like the one shown below.</p>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="_images/phonons.png"><img alt="ase" src="_images/phonons.png" style="width: 600px;" /></a>
+<figcaption>
+<p><span class="caption-text">Comparison of phonon spectra calculated with the parametrized DFTB+ method and VASP.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CCS</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Fitting 2-body repulsive potentials using CCS</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Jolla Kullgren.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/introduction.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
