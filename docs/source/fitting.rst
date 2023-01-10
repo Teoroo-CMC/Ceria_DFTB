@@ -76,8 +76,8 @@ first column and the DFTB data in the second column (should be a ``results.tag``
       :width: 600
       :align: center
 
-      With the Atomic Simulation Environment we can get an quick overview 
-      of the training-data. We can, amongst much other, browse the structures 
+      With the Atomic Simulation Environment we can get a quick overview 
+      of the training-data. We can for example browse the structures 
       and plot the energies.    
 
 .. caution::
@@ -252,9 +252,9 @@ Phonon spectra of bulk ceria
 .. admonition:: Task
   :class: info
 
-  Go to the folders ``VALIDATION/PHONONS/001`` and ``VALIDATION/PHONONS/001`` and
+  Go to the folders ``VALIDATION/PHONONS/001`` and ``VALIDATION/PHONONS/002`` and
   perform a dftb+ calculation in each of them. To generate the phonon spectra we go
-  to the folder ``VALIDATION/PHONONS`` and make use of ``phonopy`` by using the 
+  to the folder ``VALIDATION/PHONONS`` and make use of ``phonopy`` by issuing the 
   following commands:  
  
   .. code-block::
