@@ -11,9 +11,8 @@ involved in the fitting of a repulsive potential. The data used in this example
 originates from the paper `Towards an efficient f-in-core/f-in-valence switchable
 description for DFTB calculations of Ce 4f states in ceria`.
 
-Data for the f-in-core and f-in-valance approched are located in the folders ``IN_CORE`` and ``IN_VAL``, respectively.  
+Data for the f-in-core and f-in-valence approched are located in the folders ``IN_CORE`` and ``IN_VAL``, respectively.  
 
- 
 Two ASE data-bases, one containing the reference DFT data (computed with VASP) and
 one containing the corresponding DFTB data are provided in the current example.  
 
@@ -22,9 +21,14 @@ one containing the corresponding DFTB data are provided in the current example.
  The script ``RUN`` can be used to automatically execute the various steps of this example. The scrips can be used as templates when using CCS to fit repulsive potentials for a new system.  
 
 
+0. Install required software
+============================
+Before we start we need to install CCS. The code is available `here <https://github.com/Teoroo-CMC/CCS.git>`_
+Make sure to add the CCS binary folder, ``CCS/bin/`` , to your path.
+
 1. Collect the DFT en DFTB electroinc energies
 ==============================================
-Using the script ``ccs_build_db`` we can build two ase data-bases  
+Using the script ``ccs_build_db`` from the CCS-package, we can build two ase data-bases  
 containing the DFT and DFTB data. These data-bases are used in the next step. 
 We need a list pointing to the DFT data and the corresponding DFTB data. 
 The code assume that the we provide locations of the DFT data (e.g. ``OUTCAR.gz`` or any other ASE readable file containing a geometry and corresponding energy) in the 
