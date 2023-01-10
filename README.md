@@ -1,3 +1,5 @@
 # Ceria_DFTB
 
-https://ceria-dftb.readthedocs.io/en/latest/introduction.html
+Tutorial on how to fit a repulsive potential using CCS:
+
+https://ceria-dftb.readthedocs.io/en/latest/fitting.html
