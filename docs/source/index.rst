@@ -1,4 +1,5 @@
 .. toctree::
    :maxdepth: 1
 
-   introduction.rst
+   fitting.rst
+   data.rst
