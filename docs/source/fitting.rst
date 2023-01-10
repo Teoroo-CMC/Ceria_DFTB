@@ -11,7 +11,7 @@ involved in the fitting of a repulsive potential. The data used in this example
 originates from the paper `Towards an efficient f-in-core/f-in-valence switchable
 description for DFTB calculations of Ce 4f states in ceria`.
 
-Data for the f-in-core and f-in-valence approched are located in the folders ``IN_CORE`` and ``IN_VAL``, respectively.  
+Data for the f-in-core and f-in-valence approched are located in the folders ``INCORE`` and ``INVAL``, respectively.  
 
 Two ASE data-bases, one containing the reference DFT data (computed with VASP) and
 one containing the corresponding DFTB data are provided in the current example.  
