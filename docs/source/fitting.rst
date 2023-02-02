@@ -23,7 +23,7 @@ one containing the corresponding DFTB data are provided in the current example.
 
 0. Install required software
 ============================
-Before we start we need to install CCS. The code is available `here <https://github.com/Teoroo-CMC/CCS.git>`_
+Before we start we need to install CCS. The code is available `here <https://github.com/Teoroo-CMC/CCS.git>`_ .
 Make sure to add the CCS binary folder, ``CCS/bin/`` , to your path.
 
 1. Collect the DFT en DFTB electroinc energies
@@ -82,7 +82,7 @@ first column and the DFTB data in the second column (should be a ``results.tag``
 
 .. caution::
 
-  All pairs you intead to make a repulsive potential for must have a dummy spline at the 
+  All pairs you intend to make a repulsive potential for must have a dummy spline at the 
   bottom of the it's skf-file when the DFTB data is generated.      
 
 2. Produce the specific training-file for CCS
