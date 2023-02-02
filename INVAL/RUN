@@ -1,5 +1,5 @@
 # STEP 2: Produce the specific training-file for CCS 
-(cd FITTING ; ccs_fetch DFTB 6.0 all ../TRAINING_DATA/DFT.db ../TRAINING_DATA/DFTB.db)
+(cd FITTING ; ccs_fetch -m DFTB -d ../TRAINING_DATA/DFT.db -dd ../TRAINING_DATA/DFTB.db)
 
 # STEP 3: Now we can do fitting! 
 (cd FITTING ; ccs_fit)
