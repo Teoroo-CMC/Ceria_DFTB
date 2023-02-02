@@ -45,7 +45,7 @@ first column and the DFTB data in the second column (should be a ``results.tag``
 
   .. code-block::
 
-    ccs_build_db DFTB list DFT.db DFTB.db 
+    ccs_build_db --mode DFTB --file_list list --DFT_DB DFT.db --DFTB_DB DFTB.db
 
   Example of a ``list`` file::
 
@@ -98,17 +98,12 @@ use for the fitting.
 
   .. code-block::
 
-    ccs_fetch DFTB 6.0 all TRAINING_DATA/DFT.db TRAINING_DATA/DFTB.db
-
-  The arguments corresponds to, in order: 
-  
-  ``MODE cutoff_radius(Å) No_of_structures DFT_DATABASE DFTB_DATABASE``
-  
-  For repulsive potential fitting set ``MODE=DFTB``.
+    ccs_fetch --mode DFTB --DFT_DB TRAINING_DATA/DFT.db --DFTB_DB TRAINING_DATA/DFTB.db
 
 .. caution::
 
-  Never use a cut-off radius that is smaller than used in the fitting (see next step).
+  Never use a cut-off radius that is smaller than used in the fitting (see next step). The defualt in ccs_fetch is 6.0 Å.
+
 
 3. Now we can do fitting! 
 =========================
